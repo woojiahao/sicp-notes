@@ -158,7 +158,7 @@ The general form of procedure definition is:
 - *\<name>* - symbol to be associated with the procedure definition in the environment 
 - *\<formal parameters>* - names used within the body of the procedure to refer to the corresponding arguments of the procedure
 - *\<body>* - expression that yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied
-- \<name> and \<formal parameters> are grouped within parantheses
+- *\<name>* and *\<formal parameters>* are grouped within parantheses
 -  As they would be in an actual call to the procedure being defined.
 
 With *square* defined, we can now use it:
@@ -179,3 +179,197 @@ We can even use it as a building block in defining other procedures.
 (sum-of-squares 3 4)
 >>> 25
 ```
+
+### 1.1.5 The Substitution Model for Procedure Application
+The interpreter applies the same process as primitive procedures to procedure application.
+
+The body of the procedure is evaluated with each formal parameter is replaced by the corresponding argument.
+
+```lisp
+(f 5)
+```
+
+And say that `f` has the following definition, it gives new meaning to the above procedure call.
+
+```lisp
+(define (f x) (sum-of-squares (+ x 1) (* x 2)))
+
+(f 5)
+(sum-of-squares (+ 5 1) (* 5 2))
+```
+
+As such, the problem is now the evaluations of a combination with two operands and an operator, `sum-of-squares`.
+
+With the new expanded form, we evaluate the parameters to `6` and `10` respectively.
+
+Then, after replacing `f` with its body definition of `sum-of-squares`, we will continue to substitute each procedure with its body - in this case now, we will substitute `sum-of-sqaures` with its body comprising of `square`.
+
+```lisp
+(sum-of-squares 6 10)
+(+ (square 6) (square 10))
+```
+
+Then, we apply the body of `square` to obtain our final step.
+
+```lisp
+(+ (square 6) (square 10))
+(+ (* 6 6) (* 10 10))
+```
+
+And now that we are left with only primitive operations, we will finally reduce it. 
+
+```lisp
+(+ 36 100)
+>>> 136
+```
+
+This process applied is known as the *substitution model* for procedure application.
+- Way of thinking of procedure application, not an overview of how interpreters work
+- More than 1 evaluation model
+
+#### Applicative order vs normal order
+Evaluating all operators and operands and then applying the procedure to the arguments is not the only method of evaluation.
+
+An alternative is to only evaluate operands untitheir values are needed.
+- Substitute operand expressions for parameters until it obtained an expression involving only primitive operators and then perform evaluation
+
+```lisp
+(f 5)
+(sum-of-squares (+ 5 1) (* 5 2))
+(+ (square (+ 5 1) (* 5 2)))
+(+ (* (+ 5 1) (+ 5 1)) (* (* 5 2) (* 5 2)))
+(+ (* 6 6) (* 10 10))
+(+ 36 100)
+>>> 136
+```
+
+The thing to note with this evaluation model is that some procedures might be evaluated twice, like `(+ 5 1)` and `(* 5 2)`.
+
+**Normal-order evaluation** - "fully expand and the reduce"
+- Contrast to **applicative-order evaluation** - "evaluate the arguments and then apply"
+
+Lisp uses applicative-order evaluation.
+- Due to additional efficiency obtained from avoiding repeated evaluations of the same expressions
+- Normal-order evaluation becomes much more complicated to deal with after leaving the realm of procedures that can be modelled by substitution
+
+### 1.1.6 Conditional Expressions and Predicates
+**Case analysis** - construct where we make tests and perform different operations depending on the result of said test.
+
+![](res/case-analysis.png)
+
+For instance, the above declares the function of *absolute*. In order to replicate this in Lisp, we use a special form known as `cond`.
+
+```lisp
+(define (abs x)
+  (cond ((> x 0) x)
+        ((= x 0) 0
+        ((< x 0) (- x)))))
+```
+
+`cond` general form:
+
+```lisp
+(cond (<p1> <e1>)
+      (<p2> <e2>)
+      ...
+      (<pn> <en>))
+```
+
+- **Clauses** - paranthesized pairs of expressions `<p> <e>`
+  - **Predicate** - *\<p>* - expresion whose value is interpreted as `true` or `false`
+  - **Consequent expression** - *\<e>* - value to be given if the matching predicate is `true`
+- Evaluated in order of clauses, if `p1` is false, the it moves on to `p2` and so forth
+- If none of the predicates are true, the value of `cond` is undefined
+
+Alternative for writing absolute-value procedure:
+
+```lisp
+(define (abs x)
+  (cond ((< x 0) (- x))
+        (else x)))
+```
+
+Expressed in English as
+
+> If x is less than zero return -x; otherwise return x
+
+`else` - used in place of a predicate in the final clause of a `cond`
+- `cond` returns its value if all other clauses have been bypassed (all other predicates are false)
+
+Another alternative way of writing absolute-value procedure:
+
+```lisp
+(define (abs x)
+  (if (< x 0)
+      (- x)
+      x))
+```
+
+`if` - restricted type of conditional used when there're precisely two cases in the case analysis.
+- General form:
+
+```lisp
+(if <predicate> <consequent> <alternative>)
+```
+
+- Evaluation - starts with *\<predicate>*, if `true`, return *\<consequent>*, else, return *\<alternative>*
+
+#### Logical composition operators
+Alongside `<`, `=`, `>`, there are other logical composition operators. 
+
+##### `and` 
+- Evaluates left-to-right order
+- If any *\<e>* evaluates to `false`, entire expression is `false`
+- If all *\<e>* evaluate to `true`, only then will expression be `true`
+- Special form, not procedure
+
+```lisp
+(and <e1> ... <en>)
+```
+
+```lisp
+(and (> x 5) (< x 10))
+```
+
+The above expression represents a condition that a number `x` must be in the range `5 < x < 10`.
+
+##### `or` 
+- Evaluates left-to-right order
+- If any *\<e>* evaluates to `true`, the whole expression is `true`
+- If all *\<e>* evaluates to `false`, the whole expression is `false`
+- Special form, not procedure
+
+```lisp
+(or <e1> ... <en>)
+```
+
+```lisp
+(define (>= x y)
+  (or (> x y) (= x y)))
+```
+
+##### `not`
+- If *\<e>* evaluates to `false`, expression is `true` and vice versa
+
+```lisp
+(not <e>)
+```
+
+### Exercises
+#### Exercise 1.1
+1. 10
+2. 12
+3. 8
+4. 3
+5. 6
+6. 3
+7. 4
+8. 19
+9. false
+10. 4
+11. 16
+12. 6
+13. 16
+
+#### Exercise 1.2
+Refer to 
