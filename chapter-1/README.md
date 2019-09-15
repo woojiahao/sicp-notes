@@ -372,4 +372,7 @@ The above expression represents a condition that a number `x` must be in the ran
 13. 16
 
 #### Exercise 1.2
-Refer to 
+Refer to `code`
+
+#### Exercise 1.3 
+Refer to `code`
