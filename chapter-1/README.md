@@ -376,3 +376,13 @@ Refer to `code`
 
 #### Exercise 1.3 
 Refer to `code`
+
+#### Exercise 1.4
+```lisp
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+```
+
+The procedure is used to add `a` and `b` together. The purpose of the `if` condition is to accomodate for negative values of `b` - effectively working with the absolute value of `b`.
+
+For instance, if `b = -8` and `a = 9`, the predicate of the `if` condition will evaluate to `true` and so the resulting operator will be `-`. Therefore, the evaluated expression will be `(- 9 (- 8))`. When expanded to normal form `(9 - (-8) = (17)`.
