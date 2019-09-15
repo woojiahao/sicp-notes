@@ -386,3 +386,34 @@ Refer to `code`
 The procedure is used to add `a` and `b` together. The purpose of the `if` condition is to accomodate for negative values of `b` - effectively working with the absolute value of `b`.
 
 For instance, if `b = -8` and `a = 9`, the predicate of the `if` condition will evaluate to `true` and so the resulting operator will be `-`. Therefore, the evaluated expression will be `(- 9 (- 8))`. When expanded to normal form `(9 - (-8) = (17)`.
+
+#### Exercise 1.5
+```lisp 
+(define (p) (p))
+
+(define (test x y)
+  (if (= x 0)
+      0
+      y))
+
+(test 0 (p))
+```
+
+With applicative-order evaluation, the expression is first evaluated then each argument is applied - meaning that the expressions are evaluated as they appear, rather than waiting till the very end. Therefore, the expression will attempt to evaluate `p`, which in this case if a function call. Since `p` is recursive, the interpreter will be stuck in an infinite loop.
+
+However, with normal-order evaluation, the expression is expanded first and is only evaluated when needed - meaning that the interpreter will not attempt to evaluate `(p)` before fully expanding the procedure definition of `test`. This leads to the `if` condition being evaluated first and having the expression return `0` instead of being stuck in an infinite loop.
+
+```lisp
+; Applicative-order evaluation
+(test 0 (p))
+(test 0 (p))
+...
+(test 0 (p))
+
+; Normal-order evaluation
+(test 0 (p))
+(if (= 0 0)
+    0
+    (p))
+>>> 0
+```
