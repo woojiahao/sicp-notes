@@ -355,8 +355,61 @@ The above expression represents a condition that a number `x` must be in the ran
 (not <e>)
 ```
 
-### Exercises
-#### Exercise 1.1
+### 1.1.7 Example: Square Roots by Newton's Method
+Conceptually, procedures are akin to mathematical functions. However, what sets procedures apart from mathematical functions is the fact that they have to be effective.
+
+Mathematically, we can represent the square-root function as 
+
+> sqrt(x) = the y such that y >= 0 and sq(y) = x
+
+However, the definition, while accurate mathematically, does not define a procedure computationally. 
+
+```lisp
+(define (sqrt x)
+  (the y (and (>= y 0)
+              (= (square y) x))))
+```
+
+Herein lies the contrast between (mathematical) functions and procedures is a reflection of the distinction between describing properties of things and describing how to do things.
+- Also referred to as the distinction between *declarative knowledge* and *imperative knowledge.*
+- In mathematics, we are concerned with declarative descriptions (what is)
+- In computer science, we are concerned with imperative descriptions (how to)
+
+Leading to the use and definition of **Newton's method of successive approximations**.
+
+#### Newton's method of successive approximation
+We start with a guess `y` for the value of the square root of a number `x`.
+
+To obtain a better guess (closer to the actual square root), we use the following manipulations:
+
+> Average y with x/y
+
+This average then becomes the new guess or `y` and we continue till we hit a "good enough" criteria which would be the case where the guess is as close to the square root as possible, often within some minute fractional difference.
+
+We represent this definition in lisp as follows: 
+
+```lisp
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess x) 0.001))))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+```
+
+## Chapter 1 Exercises
+### Exercise 1.1
 1. 10
 2. 12
 3. 8
@@ -371,13 +424,13 @@ The above expression represents a condition that a number `x` must be in the ran
 12. 6
 13. 16
 
-#### Exercise 1.2
+### Exercise 1.2
 Refer to `code`
 
-#### Exercise 1.3 
+### Exercise 1.3 
 Refer to `code`
 
-#### Exercise 1.4
+### Exercise 1.4
 ```lisp
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
@@ -387,7 +440,7 @@ The procedure is used to add `a` and `b` together. The purpose of the `if` condi
 
 For instance, if `b = -8` and `a = 9`, the predicate of the `if` condition will evaluate to `true` and so the resulting operator will be `-`. Therefore, the evaluated expression will be `(- 9 (- 8))`. When expanded to normal form `(9 - (-8) = (17)`.
 
-#### Exercise 1.5
+### Exercise 1.5
 ```lisp 
 (define (p) (p))
 
@@ -416,4 +469,4 @@ However, with normal-order evaluation, the expression is expanded first and is o
     0
     (p))
 >>> 0
-```
+``` ;;s
