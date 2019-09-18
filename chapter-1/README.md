@@ -402,7 +402,7 @@ We represent this definition in lisp as follows:
   (/ (+ x y) 2))
 
 (define (good-enough? guess x)
-  (< (abs (- (square guess x) 0.001))))
+  (< (abs (- (square guess) x)) 0.001))
 
 (define (sqrt x)
   (sqrt-iter 1.0 x))
@@ -469,4 +469,23 @@ However, with normal-order evaluation, the expression is expanded first and is o
     0
     (p))
 >>> 0
-``` ;;s
+```
+
+### Exercise 1.6
+```lisp
+(define (new-if predicate then-clause else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)))
+```
+
+```lisp
+(define (sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+          guess
+          (sqrt-iter (improve guess x)
+                      x)))
+```
+
+To understand how this new function will compute the square roots, we need to first see how the function will be evaluated. For this, we apply the **applicative-order evaluation**, the same one that lisp uses.
+
+When we run the code in our terminal, it doesn't return anything and is instead stuck processing it. So let's investigate why. Unlike the built in if statement, `new-if` is a procedure defined by the developer. This means that when evaluating the expression, we first evaluate the arguments of `new-if` before determining what `new-if` does, and this causes it to hang because we're never actually comparing the arguments of `new-if` since the procedure will continue to recurse.
