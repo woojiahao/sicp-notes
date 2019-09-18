@@ -514,3 +514,6 @@ In the old version, we compare the original number to the square of the guess. H
 2. How much of a fit the guess was
 
 This way, we are more flexible with the way we determine the limit for what qualifies as a `good-enough?` guess.
+
+### Exercise 1.8
+Refer to `code`
