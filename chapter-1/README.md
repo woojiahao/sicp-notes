@@ -489,3 +489,28 @@ However, with normal-order evaluation, the expression is expanded first and is o
 To understand how this new function will compute the square roots, we need to first see how the function will be evaluated. For this, we apply the **applicative-order evaluation**, the same one that lisp uses.
 
 When we run the code in our terminal, it doesn't return anything and is instead stuck processing it. So let's investigate why. Unlike the built in if statement, `new-if` is a procedure defined by the developer. This means that when evaluating the expression, we first evaluate the arguments of `new-if` before determining what `new-if` does, and this causes it to hang because we're never actually comparing the arguments of `new-if` since the procedure will continue to recurse.
+
+### Exercise 1.7
+For small numbers, our limit is too large to allow for an accurate reading. If the guesses reach a certain limit that exceeds the built in 0.001 limit, we will get false positives that are not accurate enough enough. 
+
+For large numbers, our limit is far too small for the system to appropriately measure the square root within a decent period of time since it will continue to refine the square root till it hits the 0.001 limit.
+
+The solution would be to modify `good-enough?` to look at the difference between iterations.
+
+```lisp
+; Old version
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+; New version
+(define (good-enough? guess x)
+  (< (abs (- (improve guess x) guess))
+      (* guess 0.001)))
+```
+
+In the old version, we compare the original number to the square of the guess. However, this is too strict of a requirement for the guesses to be accurate. The new version rectifies this issue by fatoring in two key components.
+
+1. The size of the leeway or limit
+2. How much of a fit the guess was
+
+This way, we are more flexible with the way we determine the limit for what qualifies as a `good-enough?` guess.
