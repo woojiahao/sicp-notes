@@ -408,6 +408,15 @@ We represent this definition in lisp as follows:
   (sqrt-iter 1.0 x))
 ```
 
+### 1.1.8 Procedures as Black-Box Abstractions
+`sqrt-iter` is recursive - procedure is defined in terms of itself.
+
+Any large program can be dissected into parts.
+- Each procedure accomplishes an identifiable task that can be used as a module in defining other procedures.
+- We regard each sub-procedure as a "black box"
+  - We are not concerned with *how* it works, we only care that it computes the result
+  - Aka `procedural abstraction`
+
 ## Chapter 1 Exercises
 ### Exercise 1.1
 1. 10
