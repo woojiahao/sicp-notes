@@ -17,7 +17,7 @@ Two elements of programming:
     - Also described as methods
     - Used for combining and abstracting procedures and data
 
-** 1.1.1 Expressions
+** Expressions
 In Lisp, entering an *expression* into an interpreter will cause the interpreter to /evaluate the expression./
 
 Combining expressions representing numbers with expressions representing primitive procedures form compound expressions
@@ -73,7 +73,7 @@ The above is an example of an expression representing the application of procedu
 - Print results
 - Aka /read-eval-print loop/
 
-** 1.1.2 Naming and the Environment
+** Naming and the Environment
 Using a name to refer to computational objects
 - Name identifies a /variable/ whose /value/ is the object
 
@@ -99,7 +99,7 @@ Due to the complex structure of computational objects, it becomes difficult to r
 *Environment* - memory that stores the /name-value/ pairs.
 - The one we use now is known as the *global environment.*
 
-** 1.1.3 Evaluating Combinations
+** Evaluating Combinations
 The interpreter takes the following steps to evaluate a combination:
 - Evaluate the subexpressions of the combination
 - Apply the procedure that is the value of the operator to the arguments
@@ -135,7 +135,7 @@ The evaluation rule does not handle definitions - instead of applying define to 
 *Special forms* - exceptions to the general evaluation rule.
 - Each special form has its own evaluation rule
 
-** 1.1.4 Compound Procedures
+**  Compound Procedures
 *Procedure definitions* - compound operations with names and referred to as a unit
 
 To illustrate the idea of procedure definition, we think of the procedure as an instruction:
@@ -183,7 +183,7 @@ We can even use it as a building block in defining other procedures.
 >>> 25
 #+end_src
 
-** 1.1.5 The Substitution Model for Procedure Application
+** The Substitution Model for Procedure Application
 The interpreter applies the same process as primitive procedures to procedure application.
 
 The body of the procedure is evaluated with each formal parameter is replaced by the corresponding argument.
@@ -255,7 +255,7 @@ Lisp uses applicative-order evaluation.
 - Due to additional efficiency obtained from avoiding repeated evaluations of the same expressions
 - Normal-order evaluation becomes much more complicated to deal with after leaving the realm of procedures that can be modelled by substitution
 
-** 1.1.6 Conditional Expressions and Predicates
+** Conditional Expressions and Predicates
 *Case analysis* - construct where we make tests and perform different operations depending on the result of said test.
 
 ![](res/case-analysis.png)
@@ -358,7 +358,7 @@ The above expression represents a condition that a number =x= must be in the ran
 (not <e>)
 #+end_src
 
-** 1.1.7 Example: Square Roots by Newton's Method
+** Example: Square Roots by Newton's Method
 Conceptually, procedures are akin to mathematical functions. However, what sets procedures apart from mathematical functions is the fact that they have to be effective.
 
 Mathematically, we can represent the square-root function as 
@@ -411,7 +411,7 @@ We represent this definition in lisp as follows:
   (sqrt-iter 1.0 x))
 #+end_src
 
-** 1.1.8 Procedures as Black-Box Abstractions
+** Procedures as Black-Box Abstractions
 =sqrt-iter= is recursive - procedure is defined in terms of itself.
 
 Any large program can be dissected into parts.
