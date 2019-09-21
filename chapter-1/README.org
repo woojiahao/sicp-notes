@@ -1,7 +1,7 @@
 #+title: SICP Chapter 1
 #+author: Woo Jia Hao 
 
-* 1.1 The Elements of Programming
+* The Elements of Programming
 Programming language serves multiple purposes.
 - Means for instructing a computer to perform tasks
 - Serves as a framework to organise our ideas about *processes*
