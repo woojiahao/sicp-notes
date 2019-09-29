@@ -1,5 +1,5 @@
 #+title: Chapter 1
-#+author: Woo Jia Hao 
+#+author: Woo Jia Hao
 
 * The Elements of Programming
   Programming language serves multiple purposes.
@@ -26,11 +26,11 @@
    primitive procedures form compound expressions
    - Represents the application of the procedure to those numbers
 
-     #+begin_src racket 
-       (+ 21 26 12 7 35) 
+     #+begin_src racket
+       (+ 21 26 12 7 35)
      #+end_src
-     
-   The above is an example of an expression representing the application of procedures to those numbers. 
+
+   The above is an example of an expression representing the application of procedures to those numbers.
    - Formed by delimiting a list of expressions within parentheses in order
    -  *Operator* - leftmost element in the list
    -  *Operands* - other elements in the list
@@ -41,17 +41,17 @@
    - Advantages:
    - Accomodates prodecures with arbitrary number of arguments
 
-     #+begin_src racket 
+     #+begin_src racket
        (+ 21 35 12 7)
        >>> 75
        (* 25 4 12)
-       >>> 1200 
+       >>> 1200
      #+end_src
 
      - No ambiguity since operator is always the leftmost element and the entire combination is delimited by the parantheses
      - Alows combinations to be nested
 
-       #+begin_src racket 
+       #+begin_src racket
          (+ (* 3 5) (- 10 6))
          >>> 19
        #+end_src
@@ -60,7 +60,7 @@
 
    *Pretty printing* - each long combination is written so that the operands are aligned vertically which display the structure of the expression.
 
-   #+begin_src racket 
+   #+begin_src racket
      (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 
      (+ (* 3
@@ -70,8 +70,8 @@
            6))
    #+end_src
 
-   *Order of interpretation* - regardless of complexity of expression. 
-   - Read expression from terminal 
+   *Order of interpretation* - regardless of complexity of expression.
+   - Read expression from terminal
    - Evaluate expression
    - Print results
    - Aka /read-eval-print loop/
@@ -81,12 +81,12 @@
    - Name identifies a /variable/ whose /value/ is the object
 
      #+begin_src racket
-       (define size 2) 
+       (define size 2)
      #+end_src
 
-   That has associated the name /size/ to the value 2. We can use this name to refer to the value 2 from now on. 
+   That has associated the name /size/ to the value 2. We can use this name to refer to the value 2 from now on.
 
-   #+begin_src racket 
+   #+begin_src racket
      size
      >>> 2
      (* 5 size)
@@ -94,7 +94,7 @@
    #+end_src
 
    /define/ is the simplest means of abstraction.
-   - Allows the use of simple names to refer to the results of compound operations 
+   - Allows the use of simple names to refer to the results of compound operations
 
    Due to the complex structure of computational objects, it becomes difficult to remember their details and this is where using names help.
    - Through the use of names, we build larger programs from smaller procedures.
@@ -110,7 +110,7 @@
    Evaluation is /recursive/ in nature, meaning that in order for the operation to occur, it must invoke itself.
    - In this scenario, for evaluation to occur, it must first evaluate all expressions
 
-   #+begin_src racket 
+   #+begin_src racket
      (* (+ 2 (* 4 6))
         (+ 3 5 7))
    #+end_src
@@ -145,12 +145,12 @@
 
    #+begin_quote
    To square something, multiply it by itself
-   #+end_quote 
+   #+end_quote
 
    Then, we express that in our language as such:
 
    #+begin_src racket
-     (define (square x) (* x x)) 
+     (define (square x) (* x x))
    #+end_src
 
    We have created a /compound procedure/ with the name /square./
@@ -159,11 +159,11 @@
 
    The general form of procedure definition is:
 
-   #+begin_src racket 
+   #+begin_src racket
      (define (<name> <formal parameters>) <body>)
    #+end_src
 
-   - /<name>/ - symbol to be associated with the procedure definition in the environment 
+   - /<name>/ - symbol to be associated with the procedure definition in the environment
    - /<formal parameters>/ - names used within the body of the procedure to refer to the corresponding arguments of the procedure
    - /<body>/ - expression that yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied
    - /<name>/ and /<formal parameters>/ are grouped within parantheses
@@ -178,7 +178,7 @@
      >>> 49
    #+end_src
 
-   We can even use it as a building block in defining other procedures. 
+   We can even use it as a building block in defining other procedures.
 
    #+begin_src racket
      (define (sum-of-squares x y)
@@ -224,7 +224,7 @@
      (+ (* 6 6) (* 10 10))
    #+end_src
 
-   And now that we are left with only primitive operations, we will finally reduce it. 
+   And now that we are left with only primitive operations, we will finally reduce it.
 
    #+begin_src racket
      (+ 36 100)
@@ -301,7 +301,7 @@
 
    +begin_quote
    If x is less than 0 return -x; otherwise return x
-   #+end_quote 
+   #+end_quote
 
    =else= - used in place of a predicate in the final clause of a =cond=
    - =cond= returns its value if all other clauses have been bypassed (all other predicates are false)
@@ -325,9 +325,9 @@
    - Evaluation - starts with /<predicate>/, if =true=, return /<consequent>/, else, return /<alternative>/
 
 *** Logical composition operators
-    Alongside =<=, ===, =>=, there are other logical composition operators. 
+    Alongside =<=, ===, =>=, there are other logical composition operators.
 
-**** =and= 
+**** =and=
      - Evaluates left-to-right order
      - If any /<e>/ evaluates to =false=, entire expression is =false=
      - If all /<e>/ evaluate to =true=, only then will expression be =true=
@@ -343,7 +343,7 @@
 
      The above expression represents a condition that a number =x= must be in the range =5 < x < 10=.
 
-**** =or= 
+**** =or=
      - Evaluates left-to-right order
      - If any /<e>/ evaluates to =true=, the whole expression is =true=
      - If all /<e>/ evaluates to =false=, the whole expression is =false=
@@ -368,13 +368,13 @@
 ** Example: Square Roots by Newton's Method
    Conceptually, procedures are akin to mathematical functions. However, what sets procedures apart from mathematical functions is the fact that they have to be effective.
 
-   Mathematically, we can represent the square-root function as 
+   Mathematically, we can represent the square-root function as
 
    \begin{equation}
    \sqrt{x} = \textrm{the y such that } y \ge 0 \textrm{ and } y^{2} = x
    \end{equation}
 
-   However, the definition, while accurate mathematically, does not define a procedure computationally. 
+   However, the definition, while accurate mathematically, does not define a procedure computationally.
 
    #+begin_src racket
      (define (sqrt x)
@@ -394,11 +394,13 @@
 
     To obtain a better guess (closer to the actual square root), we use the following manipulations:
 
-    > Average y with x/y
+    \begin{equation}
+    \textrm{Average y with } \frac{x}{y}
+    \end{equation}
 
     This average then becomes the new guess or =y= and we continue till we hit a "good enough" criteria which would be the case where the guess is as close to the square root as possible, often within some minute fractional difference.
 
-    We represent this definition in lisp as follows: 
+    We represent this definition in lisp as follows:
 
     #+begin_src racket
       (define (sqrt-iter guess x)
@@ -428,7 +430,142 @@
    - We regard each sub-procedure as a "black box"
      - We are not concerned with /how/ it works, we only care that it computes the result
      - Aka =procedural abstraction=
+     - The procedure definition should be able to suppress detail
+     - User does not need to have written the procedure but can still use the code like a blackbox.
 
+*** Local names
+    Meaning of a procedure should be independent of the parameter names used by its author.
+    - The parameter name must be local to the body of the procedure
+    - If the parameters are not local to the bodies of the procedure, the parameter might be confusing to the developer/user of the procedure
+    - *Formal parameter* - special role in the procedure definition - it doesn't matter what name the formal parameter has.
+      - This is known as a *bound variable*
+      - Procedure definition /binds/ its formal definition
+      - Definition remains unchanged if a bound variable is consistently renamed throughout the definition.
+      - If a variable is not bound, it is /free/
+      - *Scope* - set of expressions for which a binding defines a name
+
+*** Internal definitions and block structure
+    Some procedures might involve functions with the same name but have different implementations.
+    - To remedy this issue, we create a procedure to have internal definitions that are local to that procedure
+
+    #+begin_src racket
+      (define (sqrt x)
+        (define (good-enough? guess x)
+          (< (abs (- (square guess) x)) 0.001))
+        (define (improve guess x) (average guess (/ x guess)))
+        (define (sqrt-iter guess x)
+          (if (good-enough? guess x)
+              guess
+              (sqrt-iter (improve guess x) x )))
+        (sqrt-iter 1.0 x))
+    #+end_src
+
+    - *Block structure* - solution for the name-packaging problem proposed
+      - To further add to the solution, since =x= is bound in the definition of =sqrt=, the nested procedures are all in the scope of =x=
+      - Don't need to pass =x= to each procedure - =x= is a free variable in the internal definitions
+      - Aka /lexical scoping/
+
+** Procedures and the Processes They Generate
+   The knowledge we possess now is akin to understanding the rules of chess but having no experience playing the game.
+   - To build upon this knowledge, we have to be able to /visualize the process generated by various types of procedures.
+
+
+   *Procedure* - pattern for /local evaluation/ of a computational process.
+   - Specifies how each stage of the process is built upon the previous stage
+   - Make statements about the /global/ behaviour of a process whose local evolution has been specified by a procedure
+
+*** Linear Recursion and Iteration
+    *Factorial* is defined as the following function:
+
+    \begin{equation}
+    n! = n \cdot (n - 1) \cdot (n - 2) \cdot \cdot \cdot 3 \cdot 2 \cdot 1
+    \end{equation}
+
+    A common pattern for calculating factorial is realising that /n!/ is equal to /n/ times /(n - 1)!/ for any positive integer /n/.
+
+    \begin{equation}
+    n! = n \cdot [(n - 1) \cdot (n - 2) \cdot \cdot \cdot 3 \cdot 2 \cdot 1] = n \cdot (n - 1)!
+    \end{equation}
+
+    We can translate this program to lisp:
+    #+begin_src racket
+      (define (factorial n)
+        (if (= n 1)
+            1
+            (* n (factorial (- n 1)))))
+      (factorial 6)
+    #+end_src
+
+    #+CAPTION: Linear recursive process
+    [[./res/linear-recursive-process.png]]
+
+    An alternate approach to computing factorials would be to describe a rule that computing /n!/ would state that we would first multiply 1 by 2, then take the result of that multiplication and multiply it to 3 and so forth till we reach /n/
+    - A more formal definition of the rule would be that we maintain a /running product/, together with a /counter/ that counts from 1 to /n/.
+    - As the calculations progress, the following changes are made to the /running product/ and /counter/
+
+      \begin{equation}
+      product \leftarrow counter \times product
+      \end{equation}
+
+      \begin{equation}
+      counter \leftarrow counter + 1
+      \end{equation}
+
+    - We also stipulate that /n!/ is the value of the product when the counter exceeds /n/
+
+    #+begin_src racket
+      (define (factorial n)
+        (fact-iter 1 1 n))
+      (define (fact-iter product counter max-count)
+        (if (> counter max-count)
+            product
+            (fact-iter (* counter product)
+                       (+ counter 1)
+                       max-count)))
+    #+end_src
+
+    Much like the other process defined, we will produce a specific tree for the way the process is executed:
+
+    #+CAPTION: Linear recursive process
+    [[./res/linear-iterative-process.png]]
+
+    While the two processes perform the same operation, they carry different *shapes* and evolve quite differently over time.
+
+**** Linear recursive process
+     - For the first process, the substitution model reveals a shape of expansion followed by contraction
+       - *Expansion* - occurs as the process builds up a chain of /deferred operations/
+       - *Contractions* - occurs as the operations as the operations are performed
+       - *Recursive process* - process characterized by a chain of deferred operations
+       - Interpreter keeps track of the operations to be performed later on
+         - Length of the chain of deferred multiplications == the amount of information needed to keep track of it, growing linearly with /n/
+         - Aka *proportional to /n/*
+       - This process is known as a /linear recursive process/
+     - "Hidden information" is maintained by the interpreter and not contained in program variables.
+       - These indicate where the process is
+       - The longer the chain of deferment, the more information must be maintained
+
+**** Linear iterative process
+     - For the second process, the process does not grow and shrink
+     - At each step, we keep track of /product/, /counter/ and /max-count/
+     - Aka /iterative process/ - any process whose /state/ can be summarized by a fixed number of /state variables/ along with a /fixed rule/ that describes how the state variables should be updated as the process moves fro state to state
+       - Might include an *optional* end test that specifies conditions in which the process should terminate
+       - Aka /linear iterative process/
+     - Program variables provide a complete description of the state of the process at any point
+     - If the process is stopped mid-way, we would have to resume computation by providing the values of the program variables before the program was terminated.
+
+
+**** Process vs procedure
+     Recursive /process/ is different from recursive /procedure/
+     - *Recursive procedure* - syntactic fact that the procedure definition refers to the procedure itself
+       - Aka, it's a procedure that is recursive
+     - *Recursive process* - how the process evolves, not the syntax
+       - For instance, with the second implementation of the =factorial= procedure, it is described as being a /recursive procedure/ with a /linear process/ due to the shape it takes on
+     - The distinction is made due to the implementations of other languages
+       - These languages are designed to take any interpretation of any recursive procedure to consume an amount of memory that grows with the number of procedure calls - regardless of whether or not the process described is /iterative/
+       - These languages can only describe iterative processes using special-purpose *"looping-constructs"*
+       - This is not how Racket/Scheme is implemented
+       - *Tail-recursion* - process of executing an iterative process that is  described by a recursive procedure in constant space
+         - Everything is expressed using ordinary procedure call mechanisms
 ** Chapter 1 Exercises
 *** Exercise 1.1
     1. 10
@@ -448,7 +585,7 @@
 *** Exercise 1.2
     Refer to =code=
 
-*** Exercise 1.3 
+*** Exercise 1.3
     Refer to =code=
 
 *** Exercise 1.4
@@ -462,7 +599,7 @@
     For instance, if =b = -8= and =a = 9=, the predicate of the =if= condition will evaluate to =true= and so the resulting operator will be =-=. Therefore, the evaluated expression will be =(- 9 (- 8))=. When expanded to normal form =(9 - (-8) = (17)=.
 
 *** Exercise 1.5
-    #+begin_src racket 
+    #+begin_src racket
       (define (p) (p))
 
       (define (test x y)
@@ -512,7 +649,7 @@
     When we run the code in our terminal, it doesn't return anything and is instead stuck processing it. So let's investigate why. Unlike the built in if statement, =new-if= is a procedure defined by the developer. This means that when evaluating the expression, we first evaluate the arguments of =new-if= before determining what =new-if= does, and this causes it to hang because we're never actually comparing the arguments of =new-if= since the procedure will continue to recurse.
 
 *** Exercise 1.7
-    For small numbers, our limit is too large to allow for an accurate reading. If the guesses reach a certain limit that exceeds the built in 0.001 limit, we will get false positives that are not accurate enough enough. 
+    For small numbers, our limit is too large to allow for an accurate reading. If the guesses reach a certain limit that exceeds the built in 0.001 limit, we will get false positives that are not accurate enough enough.
 
     For large numbers, our limit is far too small for the system to appropriately measure the square root within a decent period of time since it will continue to refine the square root till it hits the 0.001 limit.
 
@@ -538,3 +675,99 @@
 
 *** Exercise 1.8
     Refer to =code=
+*** Exercise 1.9
+    #+begin_src racket
+      (define (inc x)
+        (+ x 1))
+
+      (define (dec x)
+        (- x 1))
+
+      (define (+ a b)
+        (if (= a 0) b (inc (+ (dec a) b))))
+
+      (define (+ a b)
+        (if (= a 0) b (+ (dec a) (inc b))))
+    #+end_src
+
+    For the first implementation, the growth of =+= will look like (note that we omit the calculation of =dec= and take that the numbers decrease automatically):
+    #+begin_src racket
+      (+ 4 5)
+      (inc (+ 3 5))
+      (inc (inc (+ 2 5)))
+      (inc (inc (inc (+ 1 5))))
+      (inc (inc (inc (inc (+ 0 5)))))
+      (inc (inc (inc (inc 5))))
+      (inc (inc (inc 6)))
+      (inc (inc 7))
+      (inc 8)
+      >>> 9
+    #+end_src
+
+    For this, we see that the first =+= is a recursive process described by a recursive procedure.
+
+    The growth of the second implementation of =+= looks like:
+    #+begin_src racket
+      (+ 4 5)
+      (+ 3 6)
+      (+ 2 7)
+      (+ 1 8)
+      (+ 0 9)
+      (9)
+      >>> 9
+    #+end_src
+
+    For this, we see that the second =+= is an iterative process described by a recursive procedure.
+*** Exercise 1.10
+    #+begin_src racket
+      (define (A x y)
+        (cond ((= y 0) 0)
+              ((= x 0) (* 2 y))
+              ((= y 1) 2)
+              (else (A (- x 1) (A x (- y 1))))))
+    #+end_src
+
+    =(A 1 10)=
+    #+begin_src racket
+      (A 1 10)
+      (A 0 (A 1 9))
+      (A 0 (A 0 (A 1 8)))
+      (A 0 (A 0 (A 0 (A 1 7))))
+      (A 0 (A 0 (A 0 (A 0 (A 1 6)))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 5))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 4)))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 3))))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 2)))))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 1))))))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 2)))))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 4))))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 8)))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 16))))))
+      (A 0 (A 0 (A 0 (A 0 (A 0 32)))))
+      (A 0 (A 0  (A 0 (A 0 64))))
+      (A 0 (A 0 (A 0 128)))
+      (A 0 (A 0 256))
+      (A 0 512)
+      (1024)
+    #+end_src
+
+    =(A 2 4)=
+    #+begin_src racket
+      (A 2 4)
+      (A 1 (A 2 3))
+      (A 1 (A 1 (A 2 2)))
+      (A 1 (A 1 (A 1 (A 2 1))))
+      (A 1 (A 1 (A 1 2)))
+      (A 1 (A 1 (A 0 (A 1 1))))
+      (A 1 (A 1 (A 0 2)))
+      (A 1 (A 1 4))
+      (A 1 (A 0 (A 1 3)))
+      (A 1 (A 0 (A 0 (A 1 2))))
+      (A 1 (A 0 (A 0 (A 0 (A 1 1)))))
+      (A 1 (A 0 (A 0 (A 0 2))))
+      (A 1 (A 0 (A 0 4)))
+      (A 1 (A 0 8))
+      (A 1 16)
+      ...
+      (65536)
+    #+end_src
