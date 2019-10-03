@@ -652,7 +652,47 @@
    In spite of the drawbacks of tree recursion, tree recursion is not useless.
    - When operating on *hierarchically structured* data rather than numbers, tree recursion is a /powerful and natural/ tool.
    - It also serves to help us understand and design programs, while performance is not top notch, the readability and ease of understanding certainly is
+     - To create the iterative process, we needed to recast as an iteration with three state variables
 
+** Example: Counting change
+   An interesting recursive problem is to find the number of ways to make change.
+
+   - Think of the types of coins available as arranged in some order
+   - The number of ways to change /a/ using /n/ kinds of coins is equal to
+     - Number of ways to change amount /a/ using all but the first kind of coin, plus
+     - Number of ways to change /a - d/ using all /n/ kinds of coins
+       - /d/ - denomination (face value of a note) of the first kind of coin
+
+   - Algorithm is defined as such
+     - /a/ == 0 -> 1 way
+     - /a/ < 0 -> 0 way
+     - /n/ == 0 -> 0 way
+
+   #+begin_src racket
+     (define (count-change amount) (cc amount 5))
+     (define (cc amount kinds-of-coins)
+       (cond ((= amount 0) 1)
+             ((or (< amount 0) (= kinds-of-coins 0)) 0)
+             (else (+ (cc amount
+                          (- kinds-of-coins 1))
+                      (cc (- amount
+                             (first-denomination
+                              kinds-of-coins))
+                          kinds-of-coins)))))
+     (define (first-denomination kinds-of-coins)
+       (cond ((= kinds-of-coins 1) 1)
+             ((= kinds-of-coins 2) 5)
+             ((= kinds-of-coins 3) 10)
+             ((= kinds-of-coins 4) 25)
+             ((= kinds-of-coins 5) 50)))
+   #+end_src
+
+   - *Note:* =denomination= assumes the order of largest to smallest but any order is fine
+
+   =count-change= generates a tree-recursive process - similar to =fib=
+   - There's no iterative alternative (like in =fib=)
+
+   "Smart compiler" - proposed to get the best of both worlds - /clarity/ of tree-recursion and /efficiency/
 * Chapter 1 Exercises
 ** Exercise 1.1
    1. 10
