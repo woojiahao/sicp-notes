@@ -23,3 +23,4 @@
 (count-change 131)
 (count-change 1)
 (count-change 2)
+(count-change 11) ;; 4
