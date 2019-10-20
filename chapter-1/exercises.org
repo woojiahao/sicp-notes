@@ -286,3 +286,15 @@
 
    Order of growth for space and time are equal at \Theta(log a)
    - As the recursion continues, the value of =a= decreases, so the number of steps vary logarithmically with =a=
+** Exercise 1.16
+   Refer to =code=
+** Exercise 1.17
+
+   #+begin_src racket
+     (define (* a b)
+       (if (= b 0)
+           0
+           (+ a (* a (- b 1)))))
+   #+end_src
+
+   Refer to =code=
