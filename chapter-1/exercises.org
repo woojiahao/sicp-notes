@@ -298,3 +298,5 @@
    #+end_src
 
    Refer to =code=
+** Exercise 1.18
+   Refer to =code=
