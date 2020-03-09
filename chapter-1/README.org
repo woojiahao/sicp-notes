@@ -238,7 +238,7 @@
 *** Applicative order vs normal order
     Evaluating all operators and operands and then applying the procedure to the arguments is not the only method of evaluation.
 
-    An alternative is to only evaluate operands untitheir values are needed.
+    An alternative is to only evaluate operands until their values are needed.
     - Substitute operand expressions for parameters until it obtained an expression involving only primitive operators and then perform evaluation
 
     #+begin_src racket
@@ -805,3 +805,69 @@
 
    The advantages of a logarithmic order of growth to a linear order of growth is apparent as the size of the input increases.
    - If /n/ is 1000, =fast-expt= requires 14 multiplications while =expt= requires 1000 multiplications
+** Greatest common divisor
+   Greatest common divisor of two integers /a/ and /b/ is defined to be the largest integer that divides both /a/ and /b/ without a remainder.
+
+   Knowing how to compute the GCD will aid in reducing rational numbers to the lowest terms.
+   - To reduce a rational number to the lowest terms, divide the numerator and denominator by the GCD
+
+   One approach is to factor them and find the common factors.
+
+   Or use an algorithm developed (Euclid's Algorithm):
+   - If /r/ is the remainder when /a/ is divided by /b/, the common divisors of /a/ and /b/ are precisely the same as the common divisors of /b/ and /r/.
+     - GCD(a, b) = GCD(b, r)
+     - Can be used to reduce the problem of computing a GCD to the problem of computing the GCD of smaller and smaller pairs of integers
+     - Reduce the pair until the remainder is 0
+
+       GCD(206, 40) = GCD(40, 6)
+       = GCD(6, 4)
+       = GCD(4, 2)
+       = GCD(2, 0)
+       = 2
+
+       #+begin_src lisp
+         (define (gcd a b)
+           (if (= b 0)
+               a
+             (gcd b (remainder a b))))
+       #+end_src
+
+   - Euclid's Algorithm has logarithmic growth
+*** Lame's Theorem
+    #+begin_quote
+    If Euclid's Algorithm requires /k/ steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the k^{th} Fibonacci number
+    #+end_quote
+
+    - Get an order-of-growth estimate for Euclid's Algorithm
+      - Let /n/ be the smaller of the two inputs to the procedure
+      - If the process takes /k/ steps, \(n \geq Fib(k) \approx \varphi^{k} / \sqrt{5}\)
+
+      - # of steps /k/ grows as the logarithm (to the base \varphi) of /n/
+      - Order of growth is \(\Theta(log /n/)\)
+** Testing for primality
+*** Searching for divisors
+    - To test is a number is prime, find the number's divisors
+      - A number is prime if and only if n is its own smallest divisor
+    - Start with a divisor of 2
+    - If n is not prime, it must have a divisor \(\leq \sqrt{n}\)
+      - # of steps to find n as prime has an order of growth of \(\Theta(\sqrt{n})\)
+
+    #+begin_src lisp
+      (define (smallest-divisor n) (find-divisor n 2))
+      (define (divide? a b) (= (remainder b a) 0))
+      (define (find-divisor n test-divisor)
+        (cond ((> (square test-divisor) n) n)
+              ((divides? test-divisor n) test-divisor)
+              (else find-divisor n (+ test-divisor 1))))
+      (define (prime? n)
+        (= n (smallest-divisor n)))
+    #+end_src
+*** Fermat test
+    - \(\Theta(log n)\) primality test
+
+    #+begin_quote
+    *Fermat's Little Theorem:* If /n/ is a prime number and /a/ is any positive integer less than /n/, then /a/ raised to the \(n^{th}\) power is congruent to /a/ % /n/
+    #+end_quote
+
+    - *Congruent modulo:* if both numbers have the same remainder when divided by /n/
+    - *Modulo:* remainder of a number /a/ when divided by /n/

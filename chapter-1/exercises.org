@@ -300,3 +300,67 @@
    Refer to =code=
 ** Exercise 1.18
    Refer to =code=
+** Exercise 1.19
+
+   To solve this problem, we will use vectors
+
+   Explanation can be found [[http://community.schemewiki.org/?sicp-ex-1.19][here.]]
+
+   #+begin_src racket
+     (define (fib n)
+       (fib-iter 1 0 0 1 n))
+     (define (fib-iter a b p q count)
+       (cond ((= count 0) b)
+             ((even? count)
+              (fib-iter a
+                        b
+                        ...
+                        ...
+                        (/count 2)))
+             (else (fib-iter (+ (* b q) (* a q) (* a p))
+                             (+ (* b p) (* a q))
+                             p
+                             q
+                             (- count 1)))))
+   #+end_src
+** Exercise 1.20
+   Iterative GCD procedure:
+
+   #+begin_src lisp
+     (define (gcd a b)
+       (if (= b 0)
+           a
+         (gcd b (remainder a b))))
+   #+end_src
+
+   Using normal-order substitution for =(gcd 206 40)= - which should also include the expansion of the =if= statements.
+   #+begin_src lisp
+     (gcd 206 40) ;; 0; 0
+     (gcd 40
+          (remainder 206 40)) ;; 1 = 0 + 1; 1
+     (gcd (remainder 206 40)
+          (remainder 40 (remainder 206 40))) ;; 3 = 0 + 1 + 2; 2
+     (gcd (remainder 40 (remainder 206 40))
+          (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) ;; 6 = 0 + 1 + 2 + 3; 4
+     (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+          (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))) ;; 11 = 0 + 1 + 2 + 3 + 5; 7
+     (2)
+   #+end_src
+
+   Using applicative-order substitution for =(gcd 206 40)=
+   #+begin_src lisp
+     (gcd 206 40)
+     (gcd 40 (remainder 206 40))
+     (gcd 40 6)
+     (gcd 6 (remainder 40 6))
+     (gcd 6 4)
+     (gcd 4 (remainder 6 4))
+     (gcd 4 2)
+     (gcd 2 (remainder 4 2))
+     (gcd 2 0)
+     (2)
+   #+end_src
+
+   When using the normal-order evaluation, a total of 11 =remainder= calls are made. While using the applicative-order evaluation, a total of 4 =remainder= calls are made. However, if we count the =if= statements used for the normal-order evaluation, a total of 18 =remainder= calls are made.
+
+   The number of remainder calls are in Fibonacci sequence. \(R = \sum\limits_{i=1}^n fib(n)\), however, the total number of remainder calls is equal to the remainder calls in gcd and the if statements. The number of calls in the if statements is equal to the number of remainder calls of =b=. The number of if calls have the following pattern: 0, 1, 2, 4, 7 which is +1, +1, +2, +3, which is the Fibonacci sequence but with the added values to be the Fibonacci numbers. The remainder calls in the if statements are, \(R = \sum\limits_{i=1}^n fib(n - 1)\). Thus, the formula to get the total number of remainder calls is \(R = (\sum\limits_{i=1}^n (fib(n) + fib(n -1))) + 1\)
