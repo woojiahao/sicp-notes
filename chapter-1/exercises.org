@@ -1,0 +1,366 @@
+* Chapter 1 Exercises
+** Exercise 1.1
+   1. 10
+   2. 12
+   3. 8
+   4. 3
+   5. 6
+   6. 3
+   7. 4
+   8. 19
+   9. false
+   10. 4
+   11. 16
+   12. 6
+   13. 16
+
+** Exercise 1.2
+   Refer to =code=
+
+** Exercise 1.3
+   Refer to =code=
+
+** Exercise 1.4
+   #+begin_src racket
+     (define (a-plus-abs-b a b)
+       ((if (> b 0) + -) a b))
+   #+end_src
+
+   The procedure is used to add =a= and =b= together. The purpose of the =if= condition is to accomodate for negative values of =b= - effectively working with the absolute value of =b=.
+
+   For instance, if =b = -8= and =a = 9=, the predicate of the =if= condition will evaluate to =true= and so the resulting operator will be =-=. Therefore, the evaluated expression will be =(- 9 (- 8))=. When expanded to normal form =(9 - (-8) = (17)=.
+
+** Exercise 1.5
+   #+begin_src racket
+     (define (p) (p))
+
+     (define (test x y)
+       (if (= x 0)
+           0
+           y))
+
+     (test 0 (p))
+   #+end_src
+
+   With applicative-order evaluation, the expression is first evaluated then each argument is applied - meaning that the expressions are evaluated as they appear, rather than waiting till the very end. Therefore, the expression will attempt to evaluate =p=, which in this case if a function call. Since =p= is recursive, the interpreter will be stuck in an infinite loop.
+
+   However, with normal-order evaluation, the expression is expanded first and is only evaluated when needed - meaning that the interpreter will not attempt to evaluate =(p)= before fully expanding the procedure definition of =test=. This leads to the =if= condition being evaluated first and having the expression return =0= instead of being stuck in an infinite loop.
+
+   #+begin_src racket
+     ; Applicative-order evaluation
+     (test 0 (p))
+     (test 0 (p))
+     ...
+     (test 0 (p))
+
+     ; Normal-order evaluation
+     (test 0 (p))
+     (if (= 0 0)
+         0
+         (p))
+     >>> 0
+   #+end_src
+
+** Exercise 1.6
+   #+begin_src racket
+     (define (new-if predicate then-clause else-clause)
+       (cond (predicate then-clause)
+             (else else-clause)))
+   #+end_src
+
+   #+begin_src racket
+     (define (sqrt-iter guess x)
+       (new-if (good-enough? guess x)
+               guess
+               (sqrt-iter (improve guess x)
+                          x)))
+   #+end_src
+
+   To understand how this new function will compute the square roots, we need to first see how the function will be evaluated. For this, we apply the *applicative-order evaluation*, the same one that lisp uses.
+
+   When we run the code in our terminal, it doesn't return anything and is instead stuck processing it. So let's investigate why. Unlike the built in if statement, =new-if= is a procedure defined by the developer. This means that when evaluating the expression, we first evaluate the arguments of =new-if= before determining what =new-if= does, and this causes it to hang because we're never actually comparing the arguments of =new-if= since the procedure will continue to recurse.
+
+** Exercise 1.7
+   For small numbers, our limit is too large to allow for an accurate reading. If the guesses reach a certain limit that exceeds the built in 0.001 limit, we will get false positives that are not accurate enough enough.
+
+   For large numbers, our limit is far too small for the system to appropriately measure the square root within a decent period of time since it will continue to refine the square root till it hits the 0.001 limit.
+
+   The solution would be to modify =good-enough?= to look at the difference between iterations.
+
+   #+begin_src racket
+     ; Old version
+     (define (good-enough? guess x)
+       (< (abs (- (square guess) x)) 0.001))
+
+     ; New version
+     (define (good-enough? guess x)
+       (< (abs (- (improve guess x) guess))
+          (* guess 0.001)))
+   #+end_src
+
+   In the old version, we compare the original number to the square of the guess. However, this is too strict of a requirement for the guesses to be accurate. The new version rectifies this issue by fatoring in two key components.
+
+   1. The size of the leeway or limit
+   2. How much of a fit the guess was
+
+   This way, we are more flexible with the way we determine the limit for what qualifies as a =good-enough?= guess.
+
+** Exercise 1.8
+   Refer to =code=
+** Exercise 1.9
+   #+begin_src racket
+     (define (inc x)
+       (+ x 1))
+
+     (define (dec x)
+       (- x 1))
+
+     (define (+ a b)
+       (if (= a 0) b (inc (+ (dec a) b))))
+
+     (define (+ a b)
+       (if (= a 0) b (+ (dec a) (inc b))))
+   #+end_src
+
+   For the first implementation, the growth of =+= will look like (note that we omit the calculation of =dec= and take that the numbers decrease automatically):
+   #+begin_src racket
+     (+ 4 5)
+     (inc (+ 3 5))
+     (inc (inc (+ 2 5)))
+     (inc (inc (inc (+ 1 5))))
+     (inc (inc (inc (inc (+ 0 5)))))
+     (inc (inc (inc (inc 5))))
+     (inc (inc (inc 6)))
+     (inc (inc 7))
+     (inc 8)
+     >>> 9
+   #+end_src
+
+   For this, we see that the first =+= is a recursive process described by a recursive procedure.
+
+   The growth of the second implementation of =+= looks like:
+   #+begin_src racket
+     (+ 4 5)
+     (+ 3 6)
+     (+ 2 7)
+     (+ 1 8)
+     (+ 0 9)
+     (9)
+     >>> 9
+   #+end_src
+
+   For this, we see that the second =+= is an iterative process described by a recursive procedure.
+** Exercise 1.10
+   #+begin_src racket
+     (define (A x y)
+       (cond ((= y 0) 0)
+             ((= x 0) (* 2 y))
+             ((= y 1) 2)
+             (else (A (- x 1) (A x (- y 1))))))
+   #+end_src
+
+   =(A 1 10)=
+   #+begin_src racket
+     (A 1 10)
+     (A 0 (A 1 9))
+     (A 0 (A 0 (A 1 8)))
+     (A 0 (A 0 (A 0 (A 1 7))))
+     (A 0 (A 0 (A 0 (A 0 (A 1 6)))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 5))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 4)))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 3))))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 2)))))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 1))))))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 2)))))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 4))))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 8)))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 16))))))
+     (A 0 (A 0 (A 0 (A 0 (A 0 32)))))
+     (A 0 (A 0  (A 0 (A 0 64))))
+     (A 0 (A 0 (A 0 128)))
+     (A 0 (A 0 256))
+     (A 0 512)
+     (1024)
+   #+end_src
+
+   =(A 2 4)=
+   #+begin_src racket
+     (A 2 4)
+     (A 1 (A 2 3))
+     (A 1 (A 1 (A 2 2)))
+     (A 1 (A 1 (A 1 (A 2 1))))
+     (A 1 (A 1 (A 1 2)))
+     (A 1 (A 1 (A 0 (A 1 1))))
+     (A 1 (A 1 (A 0 2)))
+     (A 1 (A 1 4))
+     (A 1 (A 0 (A 1 3)))
+     (A 1 (A 0 (A 0 (A 1 2))))
+     (A 1 (A 0 (A 0 (A 0 (A 1 1)))))
+     (A 1 (A 0 (A 0 (A 0 2))))
+     (A 1 (A 0 (A 0 4)))
+     (A 1 (A 0 8))
+     (A 1 16)
+     ...
+     (65536)
+   #+end_src
+
+   =(A 3 3)=
+   #+begin_src racket
+     (A 3 3)
+     (A 2 (A 3 2))
+     (A 2 (A 2 (A 3 1)))
+     (A 2 (A 2 2))
+     (A 2 (A 1 (A 2 1)))
+     (A 2 (A 1 2))
+     (A 2 (A 0 (A 1 1)))
+     (A 2 (A 0 2))
+     (A 2 4)
+     ...
+     (65536)
+   #+end_src
+
+   The following procedures are associated to the following mathematical definitions.
+
+   #+begin_src racket
+     (define (f n) (A 0 n))
+     (define (g n) (A 1 n))
+     (define (h n) (A 2 n))
+   #+end_src
+
+   =f= is the same as n^{2}
+   =g= is the same as 2^{n}
+   =h= is the same as 2^{2} for =n - 1= times
+** Exercise 1.11
+
+   [[./res/exercise-1-11.png]]
+
+   Refer to =code=
+
+   To begin to understand how this pattern works, we start off by listing the first /6/ =n= values for the procedure.
+
+   | n | f(n) |
+   |---+------|
+   | 1 |    1 |
+   | 2 |    2 |
+   | 3 |    4 |
+   | 4 |   11 |
+   | 5 |   25 |
+   | 6 |   59 |
+** Exercise 1.12
+
+   Refer to =code=
+
+** Exercise 1.13
+*** TODO Complete this when analysing algorithms is completed
+
+    \begin{equation}
+    \textrm{Fib(n)} \approx \frac{\phi^{n}}{\sqrt{5}}
+    \end{equation}
+** Exercise 1.14
+
+   Expand this on your own, it's not that hard
+** Exercise 1.15
+
+   #+begin_src racket
+     (define (cube x) (* x x x))
+     (define (p x) (- (* 3 x) (* 4 (cube x))))
+     (define (sine angle)
+       (if (not (> (abs angle) 0.1))
+           angle
+           (p (sine (/ angle 3.0)))))
+   #+end_src
+
+   a. 5
+   #+begin_src racket
+     (sine 12.15)
+     (p (sine 4.05))
+     (p (p (sine 1.35)))
+     (p (p (p (sine 0.45))))
+     (p (p (p (p (sine 0.15)))))
+     (p (p (p (p (p (sine 0.05))))))
+     (p (p (p (p (p 0.05))))
+        ...
+   #+end_src
+
+   b. Explanation found [[http://jots-jottings.blogspot.com/2011/09/sicp-115-sines-of-fathers.html][here]] and additional explanations can be found [[https://codology.net/post/sicp-solution-exercise-1-15/][here]]
+
+   Order of growth for space and time are equal at \Theta(log a)
+   - As the recursion continues, the value of =a= decreases, so the number of steps vary logarithmically with =a=
+** Exercise 1.16
+   Refer to =code=
+** Exercise 1.17
+
+   #+begin_src racket
+     (define (* a b)
+       (if (= b 0)
+           0
+           (+ a (* a (- b 1)))))
+   #+end_src
+
+   Refer to =code=
+** Exercise 1.18
+   Refer to =code=
+** Exercise 1.19
+
+   To solve this problem, we will use vectors
+
+   Explanation can be found [[http://community.schemewiki.org/?sicp-ex-1.19][here.]]
+
+   #+begin_src racket
+     (define (fib n)
+       (fib-iter 1 0 0 1 n))
+     (define (fib-iter a b p q count)
+       (cond ((= count 0) b)
+             ((even? count)
+              (fib-iter a
+                        b
+                        ...
+                        ...
+                        (/count 2)))
+             (else (fib-iter (+ (* b q) (* a q) (* a p))
+                             (+ (* b p) (* a q))
+                             p
+                             q
+                             (- count 1)))))
+   #+end_src
+** Exercise 1.20
+   Iterative GCD procedure:
+
+   #+begin_src lisp
+     (define (gcd a b)
+       (if (= b 0)
+           a
+         (gcd b (remainder a b))))
+   #+end_src
+
+   Using normal-order substitution for =(gcd 206 40)= - which should also include the expansion of the =if= statements.
+   #+begin_src lisp
+     (gcd 206 40) ;; 0; 0
+     (gcd 40
+          (remainder 206 40)) ;; 1 = 0 + 1; 1
+     (gcd (remainder 206 40)
+          (remainder 40 (remainder 206 40))) ;; 3 = 0 + 1 + 2; 2
+     (gcd (remainder 40 (remainder 206 40))
+          (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) ;; 6 = 0 + 1 + 2 + 3; 4
+     (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+          (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))) ;; 11 = 0 + 1 + 2 + 3 + 5; 7
+     (2)
+   #+end_src
+
+   Using applicative-order substitution for =(gcd 206 40)=
+   #+begin_src lisp
+     (gcd 206 40)
+     (gcd 40 (remainder 206 40))
+     (gcd 40 6)
+     (gcd 6 (remainder 40 6))
+     (gcd 6 4)
+     (gcd 4 (remainder 6 4))
+     (gcd 4 2)
+     (gcd 2 (remainder 4 2))
+     (gcd 2 0)
+     (2)
+   #+end_src
+
+   When using the normal-order evaluation, a total of 11 =remainder= calls are made. While using the applicative-order evaluation, a total of 4 =remainder= calls are made. However, if we count the =if= statements used for the normal-order evaluation, a total of 18 =remainder= calls are made.
+
+   The number of remainder calls are in Fibonacci sequence. \(R = \sum\limits_{i=1}^n fib(n)\), however, the total number of remainder calls is equal to the remainder calls in gcd and the if statements. The number of calls in the if statements is equal to the number of remainder calls of =b=. The number of if calls have the following pattern: 0, 1, 2, 4, 7 which is +1, +1, +2, +3, which is the Fibonacci sequence but with the added values to be the Fibonacci numbers. The remainder calls in the if statements are, \(R = \sum\limits_{i=1}^n fib(n - 1)\). Thus, the formula to get the total number of remainder calls is \(R = (\sum\limits_{i=1}^n (fib(n) + fib(n -1))) + 1\)
