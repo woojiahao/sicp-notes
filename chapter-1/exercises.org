@@ -364,3 +364,10 @@
    When using the normal-order evaluation, a total of 11 =remainder= calls are made. While using the applicative-order evaluation, a total of 4 =remainder= calls are made. However, if we count the =if= statements used for the normal-order evaluation, a total of 18 =remainder= calls are made.
 
    The number of remainder calls are in Fibonacci sequence. \(R = \sum\limits_{i=1}^n fib(n)\), however, the total number of remainder calls is equal to the remainder calls in gcd and the if statements. The number of calls in the if statements is equal to the number of remainder calls of =b=. The number of if calls have the following pattern: 0, 1, 2, 4, 7 which is +1, +1, +2, +3, which is the Fibonacci sequence but with the added values to be the Fibonacci numbers. The remainder calls in the if statements are, \(R = \sum\limits_{i=1}^n fib(n - 1)\). Thus, the formula to get the total number of remainder calls is \(R = (\sum\limits_{i=1}^n (fib(n) + fib(n -1))) + 1\)
+** Exercise 1.21
+   Refer to =code/=
+   199 - 3
+   1999 - 3
+   19999 - 3
+** Exercise 1.22
+   Refer to =code/=
