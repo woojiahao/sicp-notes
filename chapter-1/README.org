@@ -871,3 +871,53 @@
 
     - *Congruent modulo:* if both numbers have the same remainder when divided by /n/
     - *Modulo:* remainder of a number /a/ when divided by /n/
+    -
+
+    To apply the Fermat test to find primality, the following steps can be taken:
+    #+begin_quote
+    Given a number n, pick a random number a < n and compute the remainder of a^{n} modulo n.
+
+    If the result is not equal to a, then n is certainly not prime.
+
+    If it is a, repeat the test with a different value.
+
+    The more tests that are performed through this method, the higher certainty we can assert that n is a prime.
+    #+end_quote
+
+    #+begin_src lisp
+      ;; The exp is the only value that changes in expmod
+      ;; If the exp == 0, return 1 to start the calculations
+      ;; If the exp is even, square the result of the previous expmod calculation and divide it by m. The remainder of the division is the next calculation.
+      ;; If the exp is odd, multiply the base (random number) to the result of the previous expmod calculation and divide it by m. The remainder of the division is the next calculation.
+      (define (expmod base exp m)
+        (cond ((= exp 0) 1)
+              ((even? exp)
+               (remainder (square (expmod base (/ exp 2) m))
+                          m))
+              (else
+               (remainder (* base (expmod base (- exp 1) m))
+                          m))))
+
+      ;; For the test, we will generate a random number that is less than the target number
+      (define (fermat-test n)
+        (define (try-it a)
+          (= (expmod a n n) a))
+        (try-it (+ 1 (random (- n 1)))))
+
+      ;; To calculate if the value is a prime number, we will attempt the fermat test several times (n) and if all pass the test, then we return true
+      (define (fast-prime? n times)
+        (cond ((= time 0) true)
+              ((fermat-test n) (fast-prime? n (- times 1)))
+              (else false)))
+    #+end_src
+*** Probabilistic methods
+    #+begin_quote
+    Algorithms that exist where the answers are not guaranteed to be correct but with sufficient iterations, the chance of error of this algorithm is arbitrarily small so that it is negligible.
+    #+end_quote
+
+    - The Fermat's test is an example of a probabilistic algorithm
+      - For every n that fails the test, we are certain that n is not prime
+      - But for every n that passes the test, we are not certain that n is prime
+      - There are modifications that can be made to the Fermat's test that can help to improve this assertion but there's no way to guarantee that n is a prime
+        - There are some instances of numbers that pass the Fermat's test but are not prime but these are rare cases
+      - If n passes the test for 2 randomly generated numbers, then the chances of n being prime is better than \(\frac{3}{4}\)
