@@ -35,15 +35,11 @@
 ;; Calculate the smallest three prime numbers larger than 1000, 10000, 100000, and 1000000
 
 (define (search-for-primes lower upper)
-  (define (p count n)
-    (when (and (not (= count 2)) (n < upper))
-      (
-       (timed-prime-test n)
-       (p (+ count 1) (+ n 1))
-      )
-    )
-  )
-  (process 0 lower))
+  (let ([prime-analysis (filter (lambda (elem) (eq? (prime? elem) #t))
+                                (range lower upper))])
+    (take prime-analysis 3)))
 
 (search-for-primes 1000 10000)
-(timed-prime-test 7)
+(search-for-primes 10000 100000)
+(search-for-primes 100000 1000000)
+(search-for-primes 1000000 10000000)
