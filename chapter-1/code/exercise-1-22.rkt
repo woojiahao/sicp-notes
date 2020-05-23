@@ -26,7 +26,7 @@
 
 (define (start-prime-test n start-time)
   (when (prime? n)
-      (report-prime (- (runtime) start-time))))
+        (report-prime (- (runtime) start-time))))
 
 (define (report-prime elapsed-time)
   (display " *** ")
@@ -39,7 +39,20 @@
                                 (range lower upper))])
     (take prime-analysis 3)))
 
-(search-for-primes 1000 10000)
-(search-for-primes 10000 100000)
-(search-for-primes 100000 1000000)
-(search-for-primes 1000000 10000000)
+;; (search-for-primes 10000 100000)
+;; (search-for-primes 100000 1000000)
+;; (search-for-primes 1000000 10000000)
+
+;; Results:
+;; '(1009 1013 1019)
+;; '(10007 10009 10037)
+;; '(100003 100019 100043)
+;; '(1000003 1000033 1000037)
+
+(define (analyse lst)
+  (map timed-prime-test lst))
+
+(analyse '(1009 1013 1019))
+(analyse '(10007 10009 10037))
+(analyse '(100003 100019 100043))
+(analyse '(1000003 1000033 1000037))

@@ -371,3 +371,42 @@
    19999 - 3
 ** Exercise 1.22
    Refer to =code/=
+** Exercise 1.23
+   Refer to =code/=
+*** Results
+**** Unoptimized
+     1009 *** 0.097900390625
+     1013 *** 0.002197265625
+     1019 *** 0.0009765625
+
+     10007 *** 0.0029296875
+     10009 *** 0.0029296875
+     10037 *** 0.0029296875
+
+     100003 *** 0.009033203125
+     100019 *** 0.009033203125
+     100043 *** 0.009033203125
+
+     1000003 *** 0.029052734375
+     1000033 *** 0.028076171875
+     1000037 *** 0.027099609375
+**** Optimized
+     For smaller numbers, the performance is comparable
+     1009 *** 0.128173828125
+     1013 *** 0.0009765625
+     1019 *** 0.0009765625
+
+     For slightly larger numbers, the performance begins to halve
+     10007 *** 0.001953125
+     10009 *** 0.001953125
+     10037 *** 0.002197265625
+
+     For even larger numbers, the performance is around one and a half times
+     100003 *** 0.006103515625
+     100019 *** 0.006103515625
+     1000037 *** 0.01806640625
+
+     For the largest group of numbers, the performance is around one and three fifths
+     1000003 *** 0.01806640625
+     1000033 *** 0.016845703125
+     1000037 *** 0.016845703125
