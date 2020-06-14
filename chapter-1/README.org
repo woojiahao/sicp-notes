@@ -874,6 +874,7 @@
     -
 
     To apply the Fermat test to find primality, the following steps can be taken:
+
     #+begin_quote
     Given a number n, pick a random number a < n and compute the remainder of a^{n} modulo n.
 

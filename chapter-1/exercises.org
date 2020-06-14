@@ -412,3 +412,65 @@
      1000037 *** 0.016845703125
 ** Exercise 1.24
    Adapt the =timed-prime-test= to use Fermat's method
+** Exercise 1.25
+   See =code/=
+
+   Original =expmod= function used in Fermats's test to determine if n is a prime number
+
+   #+begin_src lisp
+     (define (expmod base exp m)
+       (cond ((= exp 0) 1)
+             ((even? exp)
+              (remainder (square (expmod base (/ exp 2) m))
+                         m))
+             (else
+              (remainder (* base (expmod base (- exp 1) m))
+                         m))))
+   #+end_src
+
+   Call stack
+
+   (expmod 3 7 7)
+   (remainder (* 3 (expmod 3 6 7)))
+   (remainder (* 3 (remainder (square (expmod 3 3 7)) 7)))
+   (remainder (* 3 (remainder (square (remainder (* 3 (expmod 3 2 7)) 7)))))
+   (remainder (* 3 (remainder (square (remainder (* 3 (remainder (square (expmod 3 1 7)) 7)))))))
+   (remainder (* 3 (remainder (square (remainder (* 3 (remainder (square (remainder (* 3 (expmod 3 0 7)) 7)))))))))
+   (remainder (* 3 (remainder (square (remainder (* 3 (remainder (square (remainder (* 3 1) 7)))))))))
+   (remainder (* 3 (remainder (square (remainder (* 3 (remainder (square 3))))))))
+   (remainder (* 3 (remainder (square (remainder (* 3 2))))))
+   (remainder (* 3 (remainder (square 1))))
+   (remainder (* 3 1))
+   (3)
+   (= 3 3) 'T
+
+   Starting with a^0, =expmod= calculates the remainder of each exponent every call and uses that value as the new exponent for the consistent base
+
+   #+begin_src lisp
+     (define (fast-expt b n)
+       (cond ((= n 0) 1)
+             ((even? n) (square (fast-expt b (/ n 2))))
+             (else (* b (fast-expt b (- n 1))))))
+
+     (define (expmod base exp m)
+       (remainder (fast-expt base exp) m))
+   #+end_src
+
+   Call stack
+
+   (fast-expt 3 7)
+   (* 3 (fast-expt 3 6))
+   (* 3 (square (fast-expt 3 3)))
+   (* 3 (square (* 3 (fast-expt 3 2))))
+   (* 3 (square (* 3 (square (fast-expt 3 1)))))
+   (* 3 (square (* 3 (square (* 3 (fast-expt 3 0))))))
+   (* 3 (square (* 3 (square (* 3 1)))))
+   (* 3 (square (* 3 (square 3))))
+   (* 3 (square (* 3 9)))
+   (* 3 (square 27))
+   (* 3 729)
+   (2187)
+
+   Basically, all it is doing it finding the most optimal way to determine the value of an exponent
+
+  Alyssa is correct. =expmod= works by generating the next exponent for the function every call, effectively reaching the exponent of a^n (starting from a^0). However, this method is incredibly convoluted and can be further enhanced by using the =fast-expt= function, which first calculates the value of a^n and then calculates the remainder of the exponent.
