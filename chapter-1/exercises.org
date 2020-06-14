@@ -473,4 +473,25 @@
 
    Basically, all it is doing it finding the most optimal way to determine the value of an exponent
 
-  Alyssa is correct. =expmod= works by generating the next exponent for the function every call, effectively reaching the exponent of a^n (starting from a^0). However, this method is incredibly convoluted and can be further enhanced by using the =fast-expt= function, which first calculates the value of a^n and then calculates the remainder of the exponent.
+   Alyssa is correct. =expmod= works by the remainder of exponents, effectively reaching the exponent of a^n (starting from a^0). Using the previous remainder as the value of the next computation. However, this method is incredibly convoluted and can be further enhanced by using the =fast-expt= function, which first calculates the value of a^n and then calculates the remainder of the exponent.
+** Exercise 1.26
+   Implementation
+   #+begin_src lisp
+     (define (expmod base exp m)
+       (cond ((= exp 0) 1)
+             ((even? exp)
+              (remainder (* (expmod base (/ exp 2) m)
+                            (expmod base (/ exp 2) m))
+                         m))
+             (else
+              (remainder (* base
+                            (expmod base (- exp 1) m))
+                         m))))
+     (expmod 10 11 11)
+   #+end_src
+
+   When using =square= the computation only occurs when trying the result of =expmod= has been found. However, with Louis's implementation, he calls =expmod= twice, which generates a redundant set of calls in the callstack as both will yield the same results but still require twice the computation required. As twice the work is performed per each even call, the time complexity is
+
+   \begin{equation}
+    \Theta{log {2}^{n}} = \Theta{n log 2} = \Theta{n}
+   \end{equation}
