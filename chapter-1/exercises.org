@@ -410,3 +410,5 @@
      1000003 *** 0.01806640625
      1000033 *** 0.016845703125
      1000037 *** 0.016845703125
+** Exercise 1.24
+   Adapt the =timed-prime-test= to use Fermat's method
